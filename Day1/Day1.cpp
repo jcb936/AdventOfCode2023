@@ -7,7 +7,7 @@
 struct DigitPair
 {
     std::string word{};
-    char digit{};
+    uint8_t digit{};
 };
 
 static void ReadInput(const std::string& path, std::vector<std::string>& result)
@@ -44,8 +44,8 @@ uint32_t FindAndAddDigitsWithWords(const std::string& str, const std::vector<Dig
     int32_t distanceToFirst = std::distance(std::begin(str), firstProperDigit);
     int32_t distanceToLast = std::distance(std::rbegin(str), lastProperDigit);
 
-    char firstNumber = *firstProperDigit;
-    char secondNumber = *lastProperDigit;
+    uint8_t firstNumber = *firstProperDigit;
+    uint8_t secondNumber = *lastProperDigit;
 
     for (auto& wrd : words)
     {
