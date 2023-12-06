@@ -10,49 +10,35 @@ struct Race
     uint64_t distance{};
 };
 
-void ReadInput(const std::string& path, std::vector<Race>& result)
+// Returns the race for part 2, fill the vector with the races for part 1
+Race ReadInput(const std::string& path, std::vector<Race>& races)
 {
     std::ifstream file{ path };
     std::string line{};
 
     std::vector<uint64_t> times{};
     std::vector<uint64_t> distances{};
+    std::string totalTime;
+    std::string totalDist;
 
     while (std::getline(file, line))
     {
         auto& vecRef = line.starts_with("Time") ? times : distances;
+        auto& strRef = line.starts_with("Time") ? totalTime : totalDist;
+
         std::regex numbReg{ "(\\d+)" };
         std::sregex_iterator start{ line.begin(), line.end(), numbReg };
         std::sregex_iterator end = std::sregex_iterator();
         for (auto it = start; it != end; ++it)
         {
             vecRef.push_back(std::stoull(it->str()));
+            strRef += it->str();
         }
     }
 
     for (size_t i = 0; i < times.size(); ++i)
     {
-        result.push_back({ times[i], distances[i] });
-    }
-}
-
-Race ReadInputP2(const std::string& path)
-{
-    std::ifstream file{ path };
-    std::string line{};
-    std::string totalTime;
-    std::string totalDist;
-
-    while (std::getline(file, line))
-    {
-        auto& strRef = line.starts_with("Time") ? totalTime : totalDist;
-        std::regex numbReg{ "(\\d+)" };
-        std::sregex_iterator start{ line.begin(), line.end(), numbReg };
-        std::sregex_iterator end = std::sregex_iterator();
-        for (auto it = start; it != end; ++it)
-        {
-            strRef += it->str();
-        }
+        races.push_back({ times[i], distances[i] });
     }
 
     return { std::stoull(totalTime), std::stoull(totalDist) };
@@ -86,8 +72,8 @@ uint64_t Part1(const std::vector<Race>& races)
 
 int main()
 {
-    std::vector<Race> input{};
-    ReadInput("./input.txt", input);
-    std::cout << "Part 1: " << Part1(input) << std::endl;
-    std::cout << "Part 2: " << GetNumberOfWaysForRace(ReadInputP2("./input.txt")) << std::endl;
+    std::vector<Race> racesP1{};
+    Race raceP2 = ReadInput("./input.txt", racesP1);
+    std::cout << "Part 1: " << Part1(racesP1) << std::endl;
+    std::cout << "Part 2: " << GetNumberOfWaysForRace(raceP2) << std::endl;
 }
